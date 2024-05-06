@@ -43,38 +43,29 @@ const ConfessAnonymously = () => {
  
 
   return (
-    <div className=' flex-col gap-3 '>
-        {/* all confession */}
-      <div className=''>
-        {
-          <p>All confession </p>
-        }
-   {
-        allConfession.map((confession, index) => {
-        return <ConfessCard key={index} description={confession.description}/>
-        })
-    
-   }
+    <div className=" flex-col gap-6 bg-sky-900 p-[1rem] h-[88vh] mt-[5rem] rounded-md overflow-y-scroll">
+      {/* all confession */}
+      <div className=" flex flex-col gap-3">
+        {<p className="text-[2rem] text-white mb-[1rem]">All confession </p>}
+        {allConfession.map((confession, index) => {
+          return (
+            <ConfessCard key={index} description={confession.description} />
+          );
+        })}
       </div>
 
       {/* own confession */}
-      <div >
-        {
-      <p>Your confession</p>
-        }
-        {
-        ownConfession.map((confession, _id) => {
-        return <ConfessCard key={_id} description={confession.description}/>  
-
-        })
-      }
-
+      <div className="flex flex-col gap-3">
+        {<p className="text-[2rem] text-white mb-[1rem]">Your confession</p>}
+        {ownConfession.map((confession, _id) => {
+          return <ConfessCard key={_id} description={confession.description} />;
+        })}
       </div>
 
-   {/* all user */}
-   <AllUser  path="similarPersonality"/>
+      {/* all user */}
+      <AllUser path="similarPersonality" />
     </div>
-  )
+  );
 }
 
 export default ConfessAnonymously

@@ -24,7 +24,7 @@ router.get("/personality/:id",personality);
 router.get("/allConfession",allConfession);
 router.get("/ownConfession",ownConfession);
 router.post("/confess",confessTo);
-router.get("/similarPersonality",similarPersonality);
+router.get("/similarPersonality/:id",similarPersonality);
 router.get("/allUser",allUser)
 router.get("/singleUser/:id", singleUser);
 

@@ -135,7 +135,16 @@ export const confessTo = async (req, res) => {
     if (confess2) {
       const confessedTo = await User.findById(req._id);
       const confessedBy = await User.findById(confessTo);
-      await mailSender(confessedTo.email, "Confession From Crush", confessMailSingle(confessedBy));
+      await mailSender(
+        confessedTo.email,
+        "Confession Accepted",
+        confessMailSingle(confessedBy, description)
+      );
+      await mailSender(
+        confessedBy.email,
+        "Confession Accepted",
+        confessMailSingle(confessedTo, confessData.description)
+      );
       console.log("Your Crush has Already Confessed You");
       //send mail to all user
       // select only email from all user
@@ -146,7 +155,7 @@ export const confessTo = async (req, res) => {
       // })
     } else {
       //   await mailSender(user.email,"New Confession",);
-      console.log("Crush Tak Confession Pahunch Gya...")
+      console.log("Crush Tak Confession Pahunch Gya...");
     }
     console.log("confession", confessData);
     return res.status(200).json({ success: true, data: confessData });
@@ -161,19 +170,65 @@ export const confessTo = async (req, res) => {
 
 export const similarPersonality = async (req, res) => {
   try {
-    // find all user not equal to current user
-    console.log("current user", req._id);
-    const users = await User.find({
-      _id: { $ne: req._id },
-      gender: { $ne: req.gender },
-    }).select("-password");
+    const { id } = req.params;
 
-    return res.status(200).json({ success: true, data: users });
+    // Retrieve personality traits of the specified user
+    const user = await Question.findOne({ userId:id });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    // Retrieve personality traits of all users except the specified user
+    const users = await Question.find({
+      userId: { $ne: id },
+      userGender: { $ne: user.userGender }, // Assuming you want to filter by gender as well
+    });
+
+    // Calculate cosine similarity for each user
+    const similarUsers = users.map((otherUser) => {
+      const similarityScore = computeCosineSimilarity(user, otherUser);
+      return { userId: otherUser.userId, similarityScore };
+    });
+
+    // Sort users by similarity score in descending order
+    similarUsers.sort((a, b) => b.similarityScore - a.similarityScore);
+
+    // Extract only the userIds of similar users
+    const similarUserIds = similarUsers.map((user) => user.userId);
+
+    return res.status(200).json({ success: true, data: similarUserIds});
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// Function to compute cosine similarity between two users based on their personality traits
+function computeCosineSimilarity(userA, userB) {
+  const vectorA = Object.values(userA).slice(2); // Exclude userId and userGender
+  const vectorB = Object.values(userB).slice(2); // Exclude userId and userGender
+
+  // Compute dot product
+  const dotProduct = vectorA.reduce(
+    (acc, val, index) => acc + val * vectorB[index],
+    0
+  );
+
+  // Compute magnitudes
+  const magnitudeA = Math.sqrt(
+    vectorA.reduce((acc, val) => acc + val * val, 0)
+  );
+  const magnitudeB = Math.sqrt(
+    vectorB.reduce((acc, val) => acc + val * val, 0)
+  );
+
+  // Compute cosine similarity
+  const cosineSimilarity = dotProduct / (magnitudeA * magnitudeB);
+  return cosineSimilarity;
+}
 
 export const allUser = async (req, res) => {
   try {

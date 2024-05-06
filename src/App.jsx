@@ -13,6 +13,7 @@ import SingleUser from "./compoent/SingleUser";
 import VerifyOtp from "./compoent/VerifyOtp";
 import Error404 from "./compoent/Error404";
 
+
 function App() {
   return (
  <div className="h-full w-full ">
@@ -31,6 +32,7 @@ function App() {
           <Route path='' element={<Protected Component={MyProfile}/>}/>
           {/* <Route path='friends' element={<Protected Component={Friends}/>}/> */}
           <Route path='allusers' element={<Protected Component={AllUsers}/>}/>
+          
           <Route path='confess-anonymously' element={<Protected  Component={ConfessAnonymously}/>}/>
           <Route path='confess/:id' element={<Protected  Component={ConfessWrite}/>}/>
           <Route path='details/:id' element={<Protected  Component={SingleUser}/>}/>

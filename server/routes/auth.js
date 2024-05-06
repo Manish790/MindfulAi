@@ -10,9 +10,10 @@ const router = express.Router();
 router.post("/new", singleAvatar, newUser);
 router.post("/login", login);
 router.post("/send-otp",sendOtp);
+router.use(isAuthenticated);
 
 // Routes that require authentication
-router.use(isAuthenticated);
+
 
 router.get("/me", getMyProfile);
 

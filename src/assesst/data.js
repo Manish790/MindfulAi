@@ -11,7 +11,7 @@ export const navData=[
     path:'/dashboard'
 },
 ,{
-  title:"Confess Anonymously",
+  title:"Confessions",
   icon:<FaHeartbeat />,
     path:'/dashboard/confess-anonymously'
 }
@@ -24,6 +24,11 @@ export const navData=[
    title:'All Users',
     icon:<ImUsers />,
     path:'/dashboard/allusers'
+},
+{
+   title:'People You May Know',
+    icon:<ImUsers />,
+    path:'/dashboard/similarUsers'
 },
 
 ];

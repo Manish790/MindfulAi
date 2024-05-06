@@ -1,4 +1,4 @@
-const confessMailSingle = (data) => {  
+const confessMailSingle = (data,description) => {  
     return `
     <!DOCTYPE html>
     <html>
@@ -24,6 +24,9 @@ const confessMailSingle = (data) => {
             <h1>Confession from Ypur Crush</h1>
             <p>Find the Attached Details of Crush And Make a Mpe</p>
             <h2>${data.name}</h2>
+            <p>
+            ${description}
+            </p>
         </div>
     </body>
     </html>
